@@ -11,6 +11,15 @@ e executará os seguintes comandos.
 
 # Rotas da API
 
+## Especialidade
+### Cadastro de Especialidade
+#### POST /api/speciality
+### Listagem de Especialidade
+#### GET /api/speciality
+### Apagar Especialidade
+#### DELETE /api/speciality
+
+## Médico
 ### Cadastro de médico
 #### POST /api/doctor
 ### Listagem de médicos
@@ -21,6 +30,8 @@ e executará os seguintes comandos.
 #### DELETE /api/doctor/:id
 ### "Desativar" médico
 #### DELETE /api/doctor/soft/:id
+
+## Consulta
 ### Cadastrar consulta para um animal
 #### POST /api/appointment
 ### Listar consultas
@@ -31,3 +42,4 @@ e executará os seguintes comandos.
 #### PUT /api/appointment/complete/:id
 ### Remover animal da fila por cancelamento
 #### PUT /api/appointment/cancel/:id
+
