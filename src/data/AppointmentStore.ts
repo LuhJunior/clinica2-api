@@ -13,7 +13,7 @@ type createAppointment = (
 ) => Promise<IAppointment>;
 
 class AppointmentStore {
-  path: string;
+  private path: string;
 
   constructor (path: string) {
     this.path = path;

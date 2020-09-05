@@ -4,7 +4,7 @@ import IDoctor from '../interfaces/IDoctor';
 import { env } from '../config';
 
 class DoctorStore {
-  path: string;
+  private path: string;
 
   constructor (path: string) {
     this.path = path;
@@ -39,12 +39,12 @@ class DoctorStore {
     return JSON.parse(await JsonStore.getJson(this.path));
   };
 
-  update = async (id: number, docData: { nome?: string, speciality_id?: number }): Promise<IDoctor | null> => {
+  update = async (id: number, nome?: string, speciality_id?: number): Promise<IDoctor | null> => {
     const data: Array<IDoctor> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((doctor: IDoctor) => doctor.id === id);
     if (index !== -1) {
-      if (docData.nome) data[index].nome = docData.nome;
-      if (docData.speciality_id) data[index].speciality_id = docData.speciality_id;
+      if (nome) data[index].nome = nome;
+      if (speciality_id) data[index].speciality_id = speciality_id;
       data[index].updated_at = new Date();
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
       return data[index];
@@ -63,7 +63,7 @@ class DoctorStore {
     return null;
   };
  
-  deleteSoft = async (id: number): Promise<IDoctor | null> => {
+  softDelete = async (id: number): Promise<IDoctor | null> => {
     const data: Array<IDoctor> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((doctor: IDoctor) => doctor.id === id);
     if (index !== -1) {

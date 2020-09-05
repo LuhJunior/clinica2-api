@@ -5,7 +5,7 @@ import { env } from '../config';
 import CustomError from '../utils/CustomError';
 
 class SpecialityStore {
-  path: string;
+  private path: string;
 
   constructor (path: string) {
     this.path = path;
@@ -29,9 +29,9 @@ class SpecialityStore {
     return data.find((speciality: ISpeciality) => speciality.id === id) ?? null;
   };
 
-  getByNome = async (nome: string): Promise<Array<ISpeciality>> => {
+  getByNome = async (nome: string): Promise<ISpeciality | null> => {
     const data: Array<ISpeciality> = JSON.parse(await JsonStore.getJson(this.path));
-    return data.filter((speciality: ISpeciality) => speciality.nome === nome);
+    return data.find((speciality: ISpeciality) => speciality.nome === nome) ?? null;
   };
 
   getAll = async (): Promise<Array<ISpeciality>> => {
