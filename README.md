@@ -33,7 +33,7 @@ Ou caso possua o docker apenas:
 * **GET** /api/appointment/speciality/:speciality - *Listar Consultas por Especialidade*
 * **GET** /api/appointment/pending - *Listar Consultas pendentes*
 * **GET** /api/appointment/next/:doctor_id - *Próxima Consulta de um médico*
-* **GET** /api/appointment/:id - *Buscar um Consulta pelo id*
+* **GET** /api/appointment/:id - *Buscar uma Consulta pelo id*
 * **PUT** /api/appointment/done/:id - *Marcar consulta como realizada*
 * **PUT** /api/appointment/cancel/:id - *Remover animal da fila por cancelamento*
 * **DELETE** /api/appointment/:id - *Apagar Consulta*

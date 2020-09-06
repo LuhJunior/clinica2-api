@@ -3,7 +3,7 @@ import SpecialityStore from '../../data/SpecialityStore';
 import IDoctor from '../../interfaces/IDoctor';
 import CustomError from '../../utils/CustomError';
 
-async function createDoctor(name: string, speciality_id: number): Promise<IDoctor | null> {
+async function createDoctor(name: string, speciality_id: number): Promise<IDoctor> {
   const speciality = await SpecialityStore.getById(speciality_id);
   if (!speciality) throw new CustomError(400, 'Speciality do not exists', true, { speciality_id });
 
