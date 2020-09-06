@@ -29,7 +29,7 @@ class AppointmentStore {
       breed,
       immediate,
       speciality_id,
-      status: EAppointmentStatus.PENDING,
+      status_id: EAppointmentStatus.PENDING,
       created_at: new Date(),
       updated_at: null,
       deleted_at: null,
@@ -52,11 +52,11 @@ class AppointmentStore {
     return JSON.parse(await JsonStore.getJson(this.path));
   };
 
-  updateStatus = async (id: number, status: EAppointmentStatus): Promise<IAppointment | null> => {
+  updateStatus = async (id: number, status_id: EAppointmentStatus): Promise<IAppointment | null> => {
     const data: Array<IAppointment> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((appointment: IAppointment) => appointment.id === id);
-    if (index !== -1) {
-      data[index].status = status;
+    if (index !== -1 && data[index].deleted_at === null) {
+      data[index].status_id = status_id;
       data[index].updated_at = new Date();
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
       return data[index];
@@ -67,7 +67,7 @@ class AppointmentStore {
   delete = async (id: number): Promise<IAppointment | null> => {
     const data: Array<IAppointment> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((appointment: IAppointment) => appointment.id === id);
-    if (index !== -1) {
+    if (index !== -1 && data[index].deleted_at === null) {
       const xAppointment: IAppointment = data.splice(index, 1)[0];
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
       return xAppointment;
@@ -75,10 +75,10 @@ class AppointmentStore {
     return null;
   };
  
-  deleteSoft = async (id: number): Promise<IAppointment | null> => {
+  softDelete = async (id: number): Promise<IAppointment | null> => {
     const data: Array<IAppointment> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((appointment: IAppointment) => appointment.id === id);
-    if (index !== -1) {
+    if (index !== -1 && data[index].deleted_at === null) {
       data[index].deleted_at = new Date();
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
       return data[index];

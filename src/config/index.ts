@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import winston from './winston';
 import InternalError from '../utils/InternalError';
 
-if (!(process.env.NODE_ENV || process.env.JWT_SECRET || process.env.PORT)) {
+if (!(process.env.NODE_ENV || process.env.PORT)) {
   if (!fs.existsSync(path.join(__dirname, '..', '..', '.env'))) InternalError('.env not found');
   dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 }

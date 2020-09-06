@@ -8,6 +8,6 @@ COPY package*.json ./
 
 COPY tsconfig.json ./
 
-COPY ./src ./src
+VOLUME [ "/app/src/storage" ]
 
 RUN npm ci --quiet

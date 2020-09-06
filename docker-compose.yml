@@ -4,8 +4,6 @@ services:
   clinica2:
     build:
       context: .
-    volumes:
-      - /app/src/storage
     ports:
       - ${PORT}:${PORT}
     env_file:

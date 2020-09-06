@@ -6,10 +6,11 @@ export default interface IAppointment {
   specie: string;
   breed: string;
   immediate: boolean;
-  // especialidade: string;
+  speciality?: string;
   speciality_id: number;
-  status: EAppointment;
-  created_at: Date | null;
+  status?: string;
+  status_id: EAppointment;
+  created_at: Date;
   updated_at?: Date | null;
   deleted_at?: Date | null;
 };

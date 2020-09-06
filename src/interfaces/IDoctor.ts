@@ -3,7 +3,7 @@ export default interface IDoctor {
   name: string;
   speciality_id: number;
   speciality?: string;
-  created_at: Date | null;
+  created_at: Date;
   updated_at?: Date | null;
   deleted_at?: Date | null;
 };

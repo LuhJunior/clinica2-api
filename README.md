@@ -39,7 +39,7 @@ e executará os seguintes comandos.
 ### Próxima Consulta de um médico
 #### GET /api/appointment/next/:doctor_id
 ### Marcar consulta como realizada
-#### PUT /api/appointment/complete/:id
+#### PUT /api/appointment/done/:id
 ### Remover animal da fila por cancelamento
 #### PUT /api/appointment/cancel/:id
 

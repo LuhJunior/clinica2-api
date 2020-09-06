@@ -8,6 +8,8 @@ COPY tsconfig.json ./
 
 COPY ./src ./src
 
+RUN mkdir -p ./src/storage
+
 RUN npm ci --quiet 
 
 RUN npm run build
@@ -27,6 +29,8 @@ COPY package*.json ./
 RUN npm ci --quiet --only=production
 
 COPY --from=builder /app/dist ./dist
+
+VOLUME [ "/app/dist/storage" ]
 
 EXPOSE ${PORT}
 

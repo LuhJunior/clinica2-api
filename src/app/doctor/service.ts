@@ -72,7 +72,7 @@ async function deleteDoctor(id: number, soft?: boolean): Promise<IDoctor> {
   const xDoctor = soft ? await DoctorStore.softDelete(id) : await DoctorStore.delete(id);
   if (!xDoctor) throw new CustomError(400, 'Doctor do not exists', true, { id });
 
-  const speaciality = await SpecialityStore.getById(xDoctor.id);
+  const speaciality = await SpecialityStore.getById(xDoctor.speciality_id);
   xDoctor.speciality = speaciality?.name;
   return xDoctor;
 }
