@@ -3,30 +3,23 @@ import path from 'path';
 import faker from 'faker';
 import SpecialityService from '../service';
 
-describe('speciality.unit.test.ts', () => {
-  /* beforeAll(async () => {
-    try {
-        
-    } catch (e) {
-    }
-  });
+const dirPath = path.join(__dirname, '..', '..', '..', 'storage');
 
-  afterAll(async () => {
-    try {
-    } catch (e) {
-    }
-  }); */
-  /* beforeEach(() => {
-    return fs.mkdirSync(path.join(__dirname, '..', '..', '..', 'storage'));
+describe('speciality.unit.test.ts', () => {
+  beforeEach(() => {
+    if (!fs.existsSync(dirPath)) return fs.mkdirSync(dirPath);
   });
 
   afterEach(() => {
-    return fs.rmdirSync(path.join(__dirname, '..', '..', '..', 'storage'), { recursive: true });
-  }); */
+    if (fs.existsSync(dirPath)) {
+      fs.readdirSync(dirPath).forEach((file) => fs.unlinkSync(path.join(dirPath, file)));
+      fs.rmdirSync(dirPath);
+    }
+  });
 
   describe('Function createSpeaciality', () => {
     it('Should create a speciality', async () => {
-      const name = faker.name.jobTitle();
+      const name = faker.name.jobType().substr(0, 29);
       const speciality = await SpecialityService.createSpeaciality(name);
 
       expect(speciality.id).toEqual(1);
@@ -34,7 +27,7 @@ describe('speciality.unit.test.ts', () => {
     });
 
     it('Create a speciality that already exists, should throw an error', async () => {
-      const name = faker.name.jobTitle();
+      const name = faker.name.jobType().substr(0, 29);
       await SpecialityService.createSpeaciality(name);
 
       await expect(SpecialityService.createSpeaciality(name)).rejects.toThrow();
@@ -43,7 +36,7 @@ describe('speciality.unit.test.ts', () => {
 
   describe('Function getSpeacialityById', () => {
     it('Should return a speciality', async () => {
-      const name = faker.name.jobTitle();
+      const name = faker.name.jobType().substr(0, 29);
       const speciality = await SpecialityService.createSpeaciality(name);
       const spec = await SpecialityService.getSpeacialityById(speciality.id);
 
@@ -52,17 +45,17 @@ describe('speciality.unit.test.ts', () => {
     });
 
     it('A id that not exists in speciality, should return null', async () => {
-      const name = faker.name.jobTitle();
+      const name = faker.name.jobType().substr(0, 29);
       const speciality = await SpecialityService.createSpeaciality(name);
       const spec = await SpecialityService.getSpeacialityById(speciality.id + 1);
 
-      expect(spec).toBe(null);
+      expect(spec).toEqual(null);
     });
   });
 
   describe('Function getSpeacialityByName', () => {
     it('Should return a speciality', async () => {
-      const name = faker.name.jobTitle();
+      const name = faker.name.jobType().substr(0, 29);
       const speciality = await SpecialityService.createSpeaciality(name);
       const spec = await SpecialityService.getSpeacialityByName(name);
 
@@ -71,11 +64,11 @@ describe('speciality.unit.test.ts', () => {
     });
 
     it('A name that not exists in speciality, should return null', async () => {
-      const name = faker.name.jobTitle();
+      const name = faker.name.jobType().substr(0, 29);
       await SpecialityService.createSpeaciality(name);
       const spec = await SpecialityService.getSpeacialityByName(`${name} ${faker.name.jobType()}`);
 
-      expect(spec).toBe(null);
+      expect(spec).toEqual(null);
     });
   });
 
@@ -90,28 +83,29 @@ describe('speciality.unit.test.ts', () => {
       const n = faker.random.number({ min: 0, max: 10 });
       const specs = await Promise.all(
         Array(n)
-          .fill((() => SpecialityService.createSpeaciality(faker.name.jobTitle()))())
+          .fill(null)
+          .map(() => SpecialityService.createSpeaciality(faker.name.jobType().substr(0, 29)))
       );
 
       const specialities = await SpecialityService.getAllSpeaciality();
 
       expect(specialities.length).toEqual(n);
-      expect(specialities).toContain(specs);
+      expect(specialities).toEqual(expect.arrayContaining(specs));
     });
   });
 
   describe('Function deleteSpeaciality', () => {
     it('Should delete a speciality', async () => {
-      const speciality = await SpecialityService.createSpeaciality(faker.name.jobTitle());
+      const speciality = await SpecialityService.createSpeaciality(faker.name.jobType().substr(0, 29));
       const xSpeciality = await SpecialityService.deleteSpeaciality(speciality.id);
       const noneSpeciality = await SpecialityService.getSpeacialityById(speciality.id);
 
-      expect(speciality).toBe(xSpeciality);
-      expect(noneSpeciality).toBe(null);
+      expect(speciality).toEqual(xSpeciality);
+      expect(noneSpeciality).toEqual(null);
     });
 
     it('A id that not exists in speciality, should throw an error', async () => {
-      const speciality = await SpecialityService.createSpeaciality(faker.name.jobTitle());
+      const speciality = await SpecialityService.createSpeaciality(faker.name.jobType().substr(0, 29));
 
       await expect(SpecialityService.deleteSpeaciality(speciality.id + 1)).rejects.toThrow();
     });

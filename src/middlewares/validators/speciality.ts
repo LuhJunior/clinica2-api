@@ -16,7 +16,8 @@ export default {
     name: [
       param('name')
         .notEmpty()
-        .isString(),
+        .isString()
+        .not().isInt(),
     ],
   },
   delete: [

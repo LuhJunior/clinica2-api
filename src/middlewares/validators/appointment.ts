@@ -5,13 +5,16 @@ export default {
     body('name')
       .notEmpty()
       .isString()
-      .isLength({ min: 2, max: 70 }),
+      .isLength({ min: 2, max: 70 })
+      .not().isInt(),
     body('specie')
       .notEmpty()
-      .isString(),
+      .isString()
+      .not().isInt(),
     body('breed')
       .notEmpty()
-      .isString(),
+      .isString()
+      .not().isInt(),
     body('immediate')
       .notEmpty()
       .isBoolean(),
@@ -28,7 +31,8 @@ export default {
     speciality: [
       param('speciality')
         .notEmpty()
-        .isString(),
+        .isString()
+        .not().isInt(),
     ],
     doctor: [
       param('doctor_id')

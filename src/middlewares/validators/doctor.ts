@@ -5,7 +5,8 @@ export default {
     body('name')
       .notEmpty()
       .isString()
-      .isLength({ min: 3, max: 70 }),
+      .isLength({ min: 3, max: 70 })
+      .not().isInt(),
     body('speciality_id')
       .notEmpty()
       .isInt(),
@@ -19,7 +20,8 @@ export default {
     speciality: [
       param('speciality')
         .notEmpty()
-        .isString(),
+        .isString()
+        .not().isInt(),
     ],
   },
   put: [
@@ -30,7 +32,8 @@ export default {
       body('name', 'Enter a correct name')
         .notEmpty()
         .isString()
-        .isLength({ min: 3, max: 70 }),
+        .isLength({ min: 3, max: 70 })
+        .not().isInt(),
       body('speciality_id', 'Invalid id')
         .notEmpty()
         .isInt()
