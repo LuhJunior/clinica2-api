@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  clinica2:
+    build:
+      context: .
+    volumes:
+      - /app/src/storage
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"
