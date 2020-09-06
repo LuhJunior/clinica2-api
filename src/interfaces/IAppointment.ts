@@ -1,14 +1,14 @@
-import TAppointment from '../types/TAppointmentStatus';
+import EAppointment from '../enums/EAppointmentStatus';
 
 export default interface IAppointment {
   id: number;
-  nome: string;
-  especie: string;
-  raca: string;
-  urgente: boolean;
+  name: string;
+  specie: string;
+  breed: string;
+  immediate: boolean;
   // especialidade: string;
   speciality_id: number;
-  status: TAppointment;
+  status: EAppointment;
   created_at: Date | null;
   updated_at?: Date | null;
   deleted_at?: Date | null;

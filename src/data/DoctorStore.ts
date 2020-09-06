@@ -10,12 +10,12 @@ class DoctorStore {
     this.path = path;
   }
 
-  create = async (nome: string, speciality_id: number): Promise<IDoctor> => {
+  create = async (name: string, speciality_id: number): Promise<IDoctor> => {
     const data: Array<IDoctor> = JSON.parse(await JsonStore.getJson(this.path) || '[]');
     const id = data.length > 0 ? data[data.length - 1].id + 1 : 1;
     const doctor: IDoctor = {
       id,
-      nome,
+      name,
       speciality_id,
       created_at: new Date(),
       updated_at: null,
@@ -39,11 +39,11 @@ class DoctorStore {
     return JSON.parse(await JsonStore.getJson(this.path));
   };
 
-  update = async (id: number, nome?: string, speciality_id?: number): Promise<IDoctor | null> => {
+  update = async (id: number, name?: string, speciality_id?: number): Promise<IDoctor | null> => {
     const data: Array<IDoctor> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((doctor: IDoctor) => doctor.id === id);
     if (index !== -1) {
-      if (nome) data[index].nome = nome;
+      if (name) data[index].name = name;
       if (speciality_id) data[index].speciality_id = speciality_id;
       data[index].updated_at = new Date();
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
@@ -55,10 +55,10 @@ class DoctorStore {
   delete = async (id: number): Promise<IDoctor | null> => {
     const data: Array<IDoctor> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((doctor: IDoctor) => doctor.id === id);
-    if (index !== -1) {
-      const xDoctor = data.splice(index, 1);
+    if (index !== -1 && data[index].deleted_at === null) {
+      const xDoctor = data.splice(index, 1)[0];
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
-      return xDoctor[0];
+      return xDoctor;
     }
     return null;
   };
@@ -66,7 +66,7 @@ class DoctorStore {
   softDelete = async (id: number): Promise<IDoctor | null> => {
     const data: Array<IDoctor> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((doctor: IDoctor) => doctor.id === id);
-    if (index !== -1) {
+    if (index !== -1 && data[index].deleted_at === null) {
       data[index].deleted_at = new Date();
       await JsonStore.rewriteJson(this.path, JSON.stringify(data));
       return data[index];

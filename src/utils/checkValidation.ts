@@ -5,7 +5,7 @@ import CustomError from './CustomError';
 export default (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const message = `Campo(s) inválido(s): ${[... Array.from(new Set(errors.array().map(({ param }) => param)))].join(', ')}`;
+    const message = `Invalid field(s): ${[... Array.from(new Set(errors.array().map(({ param }) => param)))].join(', ')}`;
     return next(new CustomError(422, message, true, errors.array()));
   }
   return next();

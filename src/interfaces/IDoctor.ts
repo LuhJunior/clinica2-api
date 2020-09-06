@@ -1,8 +1,8 @@
 export default interface IDoctor {
   id: number;
-  nome: string;
-  // especialidade: string;
+  name: string;
   speciality_id: number;
+  speciality?: string;
   created_at: Date | null;
   updated_at?: Date | null;
   deleted_at?: Date | null;

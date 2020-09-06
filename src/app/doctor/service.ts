@@ -1,78 +1,80 @@
 import DoctorStore from '../../data/DoctorStore';
 import SpecialityStore from '../../data/SpecialityStore';
-import IDoctorResponse from '../../interfaces/IDoctorResponse';
+import IDoctor from '../../interfaces/IDoctor';
 import CustomError from '../../utils/CustomError';
 
-async function createDoctor(nome: string, speciality_id: number): Promise<IDoctorResponse | null> {
+async function createDoctor(name: string, speciality_id: number): Promise<IDoctor | null> {
   const speciality = await SpecialityStore.getById(speciality_id);
   if (!speciality) throw new CustomError(400, 'Speciality do not exists', true, { speciality_id });
-  const doctor = await DoctorStore.create(nome, speciality_id);
-  return ({
-    ...doctor,
-    especialidade: speciality.nome,
-  });
+
+  const doctor = await DoctorStore.create(name, speciality_id);
+  doctor.speciality = speciality.name;
+  return doctor;
 }
 
-async function getDoctorById(id: number): Promise<IDoctorResponse | null> {
+async function getDoctorById(id: number): Promise<IDoctor | null> {
   const doctor = await DoctorStore.getById(id);
-  if (!doctor) return null;
+  if (!doctor || doctor.deleted_at !== null) return null;
+
   const speaciality = await SpecialityStore.getById(doctor.speciality_id);
-  return ({
-    ...doctor,
-    especialidade: speaciality?.nome ?? '',
-  });
+  doctor.speciality = speaciality?.name;
+  return doctor;
 }
 
-async function getAllDoctor(): Promise<Array<IDoctorResponse>> {
+async function getAllDoctor(): Promise<Array<IDoctor>> {
   const specialities = await SpecialityStore.getAll();
   const doctors = await DoctorStore.getAll();
-  return doctors.map((doctor) => {
-    const speciality = specialities.find(spec => spec.id === doctor.speciality_id);
-    return ({
-      ...doctor,
-      especialidade: speciality?.nome ?? '',
-    });
-  });
+  return (
+    doctors
+      .map((doctor) => {
+        const speciality = specialities.find(spec => spec.id === doctor.speciality_id);
+        doctor.speciality = speciality?.name;
+        return doctor;
+      })
+      .filter(doc => doc.deleted_at === null)
+  );
 }
 
-async function getDoctorBySpeciality(nome: string): Promise<Array<IDoctorResponse>> {
-  const speciality = await SpecialityStore.getByNome(nome);
-  if (!speciality) throw new CustomError(400, 'Speciality do not exists', true, { nome });
+async function getDoctorBySpeciality(name: string): Promise<Array<IDoctor>> {
+  const speciality = await SpecialityStore.getByName(name);
+  if (!speciality) throw new CustomError(400, 'Speciality do not exists', true, { name });
   const doctors = await DoctorStore.getBySpeciality(speciality.id);
-  return doctors.map((doctor) => ({ ...doctor, especialidade: speciality.nome }));
+  return (
+    doctors
+      .map((doctor) => ({ ...doctor, speciality: speciality.name }))
+      .filter(doc => doc.deleted_at === null)
+  );
 }
 
 async function updateDoctor(
-  id: number, nome?: string, speciality_id?: number
-): Promise<IDoctorResponse | null> {
-  if (!nome && !speciality_id) return null;
+  id: number, name?: string, speciality_id?: number
+): Promise<IDoctor | null> {
+  if (!name && !speciality_id) return null;
   if (speciality_id) {
     const speciality = await SpecialityStore.getById(speciality_id);
     if (!speciality) throw new CustomError(400, 'Speciality do not exists', true, { speciality_id });
-    const doctor = await DoctorStore.update(id, nome, speciality_id);
-    if (!doctor) throw new CustomError(400, 'Doctor do not exists', true, { id });
-    return ({
-      ...doctor,
-      especialidade: speciality?.nome ?? '',
-    });
+
+    const doctor = await DoctorStore.update(id, name, speciality_id);
+    if (!doctor || doctor.deleted_at !== null)
+      throw new CustomError(400, 'Doctor do not exists', true, { id });
+
+    doctor.speciality = speciality.name;
+    return doctor;
   }
-  const doctor = await DoctorStore.update(id, nome);
+  const doctor = await DoctorStore.update(id, name);
   if (!doctor) throw new CustomError(400, 'Doctor do not exists', true, { id });
   const spec = await SpecialityStore.getById(doctor.speciality_id);
-  return ({
-    ...doctor,
-    especialidade: spec?.nome ?? '',
-  });
+  doctor.speciality = spec?.name;
+  return doctor;
 }
 
-async function deleteDoctor(id: number, soft?: boolean): Promise<IDoctorResponse> {
-  const xDoctor = soft ? await DoctorStore.delete(id) : await DoctorStore.softDelete(id);
+async function deleteDoctor(id: number, soft?: boolean): Promise<IDoctor> {
+  const xDoctor = soft ? await DoctorStore.softDelete(id) : await DoctorStore.delete(id);
   if (!xDoctor) throw new CustomError(400, 'Doctor do not exists', true, { id });
+
   const speaciality = await SpecialityStore.getById(xDoctor.id);
-  return ({
-    ...xDoctor,
-    especialidade: speaciality?.nome ?? '',
-  });
+  xDoctor.speciality = speaciality?.name;
+  return xDoctor;
 }
 
 export default {

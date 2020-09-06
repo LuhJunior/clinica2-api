@@ -2,13 +2,13 @@ import path from 'path';
 import JsonStore from './JsonStore';
 import IAppointment from '../interfaces/IAppointment';
 import { env } from '../config';
-import TAppointmentStatus from '../types/TAppointmentStatus';
+import EAppointmentStatus from '../enums/EAppointmentStatus';
 
 type createAppointment = (
-  nome: string,
-  especie: string,
-  raca: string,
-  urgente: boolean,
+  name: string,
+  specie: string,
+  breed: string,
+  immediate: boolean,
   speciality_id: number,
 ) => Promise<IAppointment>;
 
@@ -19,17 +19,17 @@ class AppointmentStore {
     this.path = path;
   }
 
-  create: createAppointment = async (nome, especie, raca, urgente, speciality_id) => {
+  create: createAppointment = async (name, specie, breed, immediate, speciality_id) => {
     const data: Array<IAppointment> = JSON.parse(await JsonStore.getJson(this.path) || '[]');
     const id = data.length > 0 ? data[data.length - 1].id + 1 : 1;
     const appointment: IAppointment = {
       id,
-      nome,
-      especie,
-      raca,
-      urgente,
+      name,
+      specie,
+      breed,
+      immediate,
       speciality_id,
-      status: TAppointmentStatus.PENDENTE,
+      status: EAppointmentStatus.PENDING,
       created_at: new Date(),
       updated_at: null,
       deleted_at: null,
@@ -52,7 +52,7 @@ class AppointmentStore {
     return JSON.parse(await JsonStore.getJson(this.path));
   };
 
-  updateStatus = async (id: number, status: TAppointmentStatus): Promise<IAppointment | null> => {
+  updateStatus = async (id: number, status: EAppointmentStatus): Promise<IAppointment | null> => {
     const data: Array<IAppointment> = JSON.parse(await JsonStore.getJson(this.path));
     const index = data.findIndex((appointment: IAppointment) => appointment.id === id);
     if (index !== -1) {

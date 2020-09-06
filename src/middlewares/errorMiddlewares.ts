@@ -32,10 +32,10 @@ export function errorHandler(err: CustomErr, req: Request, res: Response, next: 
   if (err.isOperational) {
     res.status(err.code).send({ data: err });
   } else {
-    res.status(500).send({ error: 'Ocorreu um erro interno' });
+    res.status(500).send({ error: 'Internal server error' });
   }
 }
 
 export function notFoundHandler(req: Request, res: Response): void {
-  res.status(404).send({ message: 'Rota nao encontrada' });
+  res.status(404).send({ message: 'Route not found' });
 }

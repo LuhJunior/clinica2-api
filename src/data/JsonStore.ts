@@ -9,7 +9,7 @@ abstract class JsonStore {
   });
 
   static rewriteJson = (path: string, data: string): Promise<string> => new Promise((resolve, reject) => {
-    fs.writeFile(path, data, (err) => {
+    fs.writeFile(path, `${data.substr(1, data.length - 2)},`, (err) => {
       if (err) return reject(err);
       return resolve(data);
     });

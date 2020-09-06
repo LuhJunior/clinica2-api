@@ -1,16 +1,16 @@
-import { Request, Response, NextFunction } from 'express';
 import DoctorService from './service';
+import TController from '../../types/TController';
 
-async function storeDoctor(req: Request, res: Response, next: NextFunction) {
+const storeDoctor: TController = async (req, res, next) => {
   try {
-    const data = await DoctorService.createDoctor(req.body.nome, req.body.speciality_id);
+    const data = await DoctorService.createDoctor(req.body.name, req.body.speciality_id);
     return res.status(200).send({ ok: true, data });
   } catch (e) {
     return next(e);
   }
 }
 
-async function findDoctorById(req: Request, res: Response, next: NextFunction) {
+const findDoctorById: TController = async (req, res, next) => {
   try {
     const data = await DoctorService.getDoctorById(parseInt(req.params.id));
     return res.status(200).send({ ok: true, data });
@@ -19,7 +19,7 @@ async function findDoctorById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function findAllDoctor(req: Request, res: Response, next: NextFunction) {
+const findAllDoctor: TController = async (req, res, next) => {
   try {
     return res.status(200).send({ ok: true, data: await DoctorService.getAllDoctor() });
   } catch (e) {
@@ -27,7 +27,7 @@ async function findAllDoctor(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function findDoctorBySpeciality(req: Request, res: Response, next: NextFunction) {
+const findDoctorBySpeciality: TController = async (req, res, next) => {
   try {
     const data = await DoctorService.getDoctorBySpeciality(req.params.speciality);
     return res.status(200).send({ ok: true, data });
@@ -36,30 +36,30 @@ async function findDoctorBySpeciality(req: Request, res: Response, next: NextFun
   }
 }
 
-async function alterDoctor(req: Request, res: Response, next: NextFunction) {
+const alterDoctor: TController = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    const data = await DoctorService.updateDoctor(id, req.body.nome, req.body.speciality_id);
+    const data = await DoctorService.updateDoctor(id, req.body.name, req.body.speciality_id);
     return res.status(200).send({ ok: true, data });
   } catch (e) {
     return next(e);
   }
 }
 
-async function destroyDoctor(req: Request, res: Response, next: NextFunction) {
+const destroyDoctor: TController = async (req, res, next) => {
   try {
     return res.status(200).send({
-      ok: true, data: DoctorService.deleteDoctor(parseInt(req.params.id)),
+      ok: true, data: await DoctorService.deleteDoctor(parseInt(req.params.id)),
     });
   } catch (e) {
     return next(e);
   }
 }
 
-async function softDestroyDoctor(req: Request, res: Response, next: NextFunction) {
+const softDestroyDoctor: TController = async (req, res, next) => {
   try {
     return res.status(200).send({
-      ok: true, data: DoctorService.deleteDoctor(parseInt(req.params.id), true),
+      ok: true, data: await DoctorService.deleteDoctor(parseInt(req.params.id), true),
     });
   } catch (e) {
     return next(e);

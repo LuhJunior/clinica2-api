@@ -4,4 +4,5 @@ import routes from '../routes';
 
 export default (app: Application): void => {
   app.use('/api/doctor',  routes.doctorRoutes);
+  app.use('/api/speciality',  routes.specialityRoutes);
 };
