@@ -2,7 +2,7 @@ import SpecialityStore from '../../data/SpecialityStore';
 import ISpeciality from '../../interfaces/ISpeciality';
 import CustomError from '../../utils/CustomError';
 
-function createSpeaciality(name: string): Promise<ISpeciality | null> {
+function createSpeaciality(name: string): Promise<ISpeciality> {
   return SpecialityStore.create(name);
 }
 

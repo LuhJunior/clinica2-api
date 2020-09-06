@@ -2,8 +2,12 @@ version: "3.7"
 
 services:
   clinica2:
+    container_name: clinica2-dev
     build:
       dockerfile: Dockerfile.dev
     command: npm run dev
     volumes:
       - ./src:/app/src
+      - /app/src/storage
+    environment:
+      NODE_ENV: development

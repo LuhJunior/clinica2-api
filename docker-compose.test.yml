@@ -2,7 +2,10 @@ version: "3.7"
 
 services:
   clinica2:
+    container_name: clinica2-test
     command: npm run test
+    build:
+      dockerfile: Dockerfile.dev
     volumes:
       - ./src:/app/src
     environment:
